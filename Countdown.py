@@ -1,18 +1,18 @@
 import random
-from time import time, sleep
+from time import sleep
 from clear import clearScr
+from copy import deepcopy
 
 def generate():
     lrg = [25, 50, 75, 100]
     vals = []
-    ops = []
-    target = 0
+    sVals = []
     #number input
     for i in range(6):
         inp = ""
         while inp == "":
             inp = input(f"{i+1}. Enter L (Large number) or S (Small number): ").lower()
-            rand = random.Random(time())
+            rand = random.Random()
             if inp != 'l' and inp != 's':
                 print("ERROR: Invalid Input, try again")
                 inp = ""
@@ -26,36 +26,44 @@ def generate():
         sleep(1)
     #target calculation
     print()
+    display(vals, "Unknown")
+    sVals = deepcopy(vals)
+    random.shuffle(sVals)
     print("Calculating target...")
-    mUsed = False
-    dUsed = False
-    target = vals[0]
-    for i in range(5):
-        rand = random.Random(time())
-        posOps = ["+"]
-        if target > vals[i+1]:
-            posOps.append("-")
-        if vals[i+1] <= 10 and not mUsed:
-            posOps.append("*")
-        if target % vals[i+1] == 0 and not dUsed:
-            posOps.append("/")
-        op = posOps[rand.randint(0, len(posOps)-1)]
+    target = 0
+    while target < sum(vals):
+        ops = []
+        mUsed = False
+        dUsed = False
+        target = sVals[0]
+        for i in range(5):
+            rand = random.Random()
+            posOps = ["+"]
+            if target > sVals[i+1]:
+                posOps.append("-")
+            if sVals[i+1] <= 10 and not mUsed:
+                posOps.append("*")
+            if target % sVals[i+1] == 0 and not dUsed:
+                posOps.append("/")
+                posOps.append("/")
+            op = posOps[rand.randint(0, len(posOps)-1)]
 
-        ops.append(op)
-        if op == "*":
-            mUsed = True
-        elif op == "/":
-            dUsed = True
-        
-        target = eval(f"{target} {op} {vals[i+1]}")
-        sleep(1)
+            ops.append(op)
+            if op == "*":
+                mUsed = True
+            elif op == "/":
+                dUsed = True
+            
+            target = eval(f"{target} {op} {sVals[i+1]}")
+            sleep(0.1)
 
-    sol = f"(((({vals[0]} {ops[0]} {vals[1]}) {ops[1]} {vals[2]}) {ops[2]} {vals[3]}) {ops[3]} {vals[4]}) {ops[4]} {vals[5]}"
+    target = int(target)
+    sol = f"(((({sVals[0]} {ops[0]} {sVals[1]}) {ops[1]} {sVals[2]}) {ops[2]} {sVals[3]}) {ops[3]} {sVals[4]}) {ops[4]} {sVals[5]}"
 
     return vals, target, sol
 
-def display(vals: list, target: int):
-    clearScr("cls")
+def display(vals: list, target):
+    clearScr()
     print("Numbers: ", end="")
     for i in range(6):
         print(f"{vals[i]}  ", end="")
