@@ -1,9 +1,13 @@
 #imports
 import random
 from clear import clearScr
-from colorama import init as colInit
-from colorama import Fore
-colInit() #initialies colour library
+try:
+    from colorama import init as colInit
+    from colorama import Fore
+    colInit() #initialies colour library
+    available = True
+except:
+    available = False
 
 #globals
 password = ""
@@ -125,17 +129,25 @@ def setMax(max: int):
     else:
         print("ERROR: Max guesses can't be less than or equal to 0")
 
+def getAvailable():
+    return available
+
 def main():
-    randomise()
-    num = 0
-    while num == 0:
-        try:
-            num = int(input("Enter the max number of guesses: "))
-        except Exception:
-            print("Error: Invalid input\n")
-            num = 0
-    setMax(num)
-    guesses()
+    if available:
+        randomise()
+        num = 0
+        while num == 0:
+            try:
+                num = int(input("Enter the max number of guesses: "))
+            except Exception:
+                print("Error: Invalid input\n")
+                num = 0
+        setMax(num)
+        guesses()
+    else:
+        print()
+        print("This game is unavailable, colorama not installed")
+        print()
 #comment out if using as an import
 #randomise()
 #guesses()

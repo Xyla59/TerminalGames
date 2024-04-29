@@ -12,7 +12,11 @@ while True:
     print("1. 2048")
     print("2. Countdown")
     print("3. Minesweeper")
-    print("4. Password Guesser")
+    print("4. Password Guesser", end="")
+    if not pg.getAvailable():
+        print(" (Unavailable)")
+    else:
+        print()
     print()
     print("0. Quit")
     print()
@@ -33,8 +37,11 @@ while True:
         print("You have selected: Minesweeper")
         ms.main()
     elif game == 4:
-        print("You have selected: Password Guesser")
-        pg.main()
+        if pg.getAvailable():
+            print("You have selected: Password Guesser")
+            pg.main()
+        else:
+            print("ERROR: Password Guesser is unavailable, colorama is not installed, please choose a different game")
     elif game == 0:
         print("Thanks for playing!")
         sleep(1)
