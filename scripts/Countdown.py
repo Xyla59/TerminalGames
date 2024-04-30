@@ -5,25 +5,29 @@ from copy import deepcopy
 
 def generate():
     lrg = [25, 50, 75, 100] #large values
-    vals = [] #selected values
+    sml = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] #small values
+    vals = ["x", "x", "x", "x", "x", "x"] #selected values
     sVals = [] #shuffled Values
     #number input
     for i in range(6):
+        display(vals, "Unknown")
         inp = ""
         while inp == "":
             inp = input(f"{i+1}. Enter L (Large number) or S (Small number): ").lower()
+            print()
             rand = random.Random()
             if inp != 'l' and inp != 's':
                 print("ERROR: Invalid Input, try again")
                 inp = ""
             else:
                 if inp == 'l': #large values
-                    vals.append(lrg[rand.randint(0,3)])
-                    print(f"Added {vals[i]}")
-                else:
-                    vals.append(rand.randint(1,10)) #small values
-                    print(f"Added {vals[i]}")
-        sleep(1) #allows for better random number calculation
+                    if len(lrg) == 0: #resets lrg list if >4 lrg numbers chosen
+                        lrg = [25, 50, 75, 100]
+                    toAdd = lrg.pop(rand.randint(0,len(lrg)-1)) #Ensures unique numbers
+                    vals[i] = toAdd
+                else: #small values
+                    toAdd = sml.pop(rand.randint(0,len(lrg)-1)) #Ensures unique numbers
+                    vals[i] = toAdd
     #target calculation
     print()
     display(vals, "Unknown")
@@ -41,9 +45,13 @@ def generate():
             posOps = ["+"] #possibe operators
             if target > sVals[i+1]: #if first value is greater, subtract is possible
                 posOps.append("-")
-            if sVals[i+1] <= 10 and not mUsed: #if second value small and multiply not used before, multiply possible
+            if sVals[i+1] <= 10 and sVals[i+1] > 1 and not mUsed: 
+                #if second value small but not 1 and multiply not used before, multiply possible
                 posOps.append("*")
-            if target % sVals[i+1] == 0 and not dUsed: #if divide produces integer and divide not used before, divide possible
+                posOps.append("*")
+            if target % sVals[i+1] == 0 and sVals[i+1] > 1 and not dUsed: 
+                #if divide produces integer and divisor > 1 and divide not used before, divide possible
+                posOps.append("/")
                 posOps.append("/")
                 posOps.append("/") #increases chances of divide actually being used
             op = posOps[rand.randint(0, len(posOps)-1)] #random selection of possible operators
@@ -71,26 +79,15 @@ def display(vals: list, target):
     for i in range(6):
         print(f"{vals[i]}  ", end="")
     print("\n")
-    print(f"Target: {target}")
-    print()
+    print(f"Target: {target}\n")
 
-def countdown(sol: str):
+def countdown(vals: list, target: int, sol: str):
     #countdown
-    sleep(1)
-    print("Countdown started!")
-    print()
-    sleep(10)
-    print("20 seconds left...")
-    print()
-    sleep(10)
-    print("10 seconds left...")
-    print()
-    sleep(5)
-    for i in range(5, 0, -1): #5,4,3,2,1
-        print(f"{i}...")
-        print()
+    for timer in range(30, -1, -1):
         sleep(1)
-    print("\n\n\n")
+        display(vals, target)
+        print(f"{timer}")
+    print("\n")
     print("TIMES UP!")
     print("\n")
     print(f"Solution:")
@@ -100,4 +97,6 @@ def main():
     print()
     vals, target, sol = generate()
     display(vals, target)
-    countdown(sol)
+    countdown(vals, target, sol)
+
+#main() #For testing purposes
