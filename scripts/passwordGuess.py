@@ -112,10 +112,11 @@ def setPassword(word: str): #setter for password if imported
 def randomise(): #picks a random 5 letter word as password and sets max guesses randomly between 5 and 10
     words = []
     maxInd = 0
-    with open("len5words.txt", "r") as f:
+    with open("wordList.txt", "r") as f:
         for line in f:
-            words.append(line[:-1])
-            maxInd += 1
+            if len(line[:-1]) == 5:
+                words.append(line[:-1])
+                maxInd += 1
     ind = random.randint(0,maxInd)
     word = words[ind]
     setPassword(word)
@@ -130,6 +131,11 @@ def setMax(max: int):
         print("ERROR: Max guesses can't be less than or equal to 0")
 
 def getAvailable():
+    try:
+        f = open("wordList.txt", "r")
+        f.close()
+    except:
+        return False
     return available
 
 def main():

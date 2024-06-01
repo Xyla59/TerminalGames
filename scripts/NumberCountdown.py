@@ -26,7 +26,7 @@ def generate():
                     toAdd = lrg.pop(rand.randint(0,len(lrg)-1)) #Ensures unique numbers
                     vals[i] = toAdd
                 else: #small values
-                    toAdd = sml.pop(rand.randint(0,len(lrg)-1)) #Ensures unique numbers
+                    toAdd = sml.pop(rand.randint(0,len(sml)-1)) #Ensures unique numbers
                     vals[i] = toAdd
     #target calculation
     print()
