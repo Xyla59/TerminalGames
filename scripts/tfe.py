@@ -3,12 +3,14 @@ import random
 import time
 from copy import deepcopy
 
-grid = [] #stores game grid
+grid = []#stores game grid
 score = 0 #stores score
 end = 0 #end var, 0 = playing, 1 = win, 2 = loss
 
 def setup(): #setup grid
-    global grid
+    global grid, score, end
+    grid = []
+    score = end = 0
     temp1 = ["", "", "", ""]
     for i in range(4):
         grid.append(deepcopy(temp1))
@@ -53,7 +55,7 @@ def drawgrid(): #draws grid to screen
         print()
     print()
 
-def checkEndCon(): #checks end conditions, 0 = continue, 1 = win, 2 = loss
+def checkEndCon(): #checks end conditions, 0 = continue, 1 = win, 2 = loss, 3 = full but possible move
     global grid, end
     end = 2 #assume loss
     for y in range(4):
@@ -64,18 +66,22 @@ def checkEndCon(): #checks end conditions, 0 = continue, 1 = win, 2 = loss
             elif grid[x][y] == "": #cont cond
                 end = 0
                 return end
-            elif checkSurround(): #other cont cond
-                end = 0
+    if checkSurround(): #other cont cond
+        end = 3
     return end
             
 def checkSurround(): #check surrounding values if possible move can be made
     global grid
-    for x in range(4):
-        for y in range(4):
+    for x in range(0, 4):
+        for y in range(0, 4):
+            checkY = False #to remove corners and centre
             for surY in range(y-1, y+2):
+                checkX = False # To remove corners and centre
                 for surX in range(x-1, x+2):
-                    if surX >= 0 and surY >= 0 and surX < 4 and surY < 4 and grid[surX][surY] == grid[x][y]:
+                    if surX >= 0 and surY >= 0 and surX < 4 and surY < 4 and grid[surX][surY] == grid[x][y] and (checkY ^ checkX):
                         return True #move can be made even if grid full
+                    checkX = not checkX
+                checkY = not checkY
     return False #no move can be made
 
 def countEmpty(item: int, line: int, change: int, yAxis: bool): #count how far to move val and if to merge
@@ -110,7 +116,7 @@ def countEmpty(item: int, line: int, change: int, yAxis: bool): #count how far t
     return count, merge #returns number to move and if to merge
 
 def move(): #looping statement for which moves to make
-    global grid, score
+    global grid, score, end
     moves = ['w','a','s','d'] #valid moves
     loop = True
     while loop:
@@ -167,12 +173,12 @@ def move(): #looping statement for which moves to make
                             score += grid[line][item-(change*count)]
                     except:
                         pass
-
-    placeNew(False)
+    if end == 0:
+        placeNew(False)
 
 def main(): #main function, handles loop and checking end conds
     setup()
-    while checkEndCon() == 0:
+    while checkEndCon() == 0 or checkEndCon() == 3:
         drawgrid()
         move()
     drawgrid()
@@ -181,4 +187,4 @@ def main(): #main function, handles loop and checking end conds
     else:
         print("No more space, you lose!")
 
-#main()
+main()
