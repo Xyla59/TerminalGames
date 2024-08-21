@@ -9,6 +9,7 @@ Current games:
  - Countdown (Maths game)
  - Minesweeper
  - Password Guesser (Wordle)
+ - Countdown (Word game)
 
 
 **Universal instructions**
