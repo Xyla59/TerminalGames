@@ -32,9 +32,9 @@ Run LinuxGameMenu.sh as a program from file explorer, or run in terminal:
 
     ./LinuxGameMenu.sh
 
-If an error comes up trying to play the Password Guesser game:
+If an error comes up trying to play the Password Guesser or Word Countdown games:
 
-You may need to open the len5words.txt file in the scripts dir to format it.
+You may need to open the wordList.txt file in the scripts dir to format it.
 
 
 **Windows Instructions**
