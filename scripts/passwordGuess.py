@@ -46,12 +46,23 @@ def checkguess(guess: str): #Logic for checking a guess
     
     return correct #returns array 
 
-def validWord(guess: str): #Validates guess is a word
-    global valWords
+def validWord(guess: str, grid: list): #Validates guess is a word and hasn't been used before
+    global valWords, maxGuess
+    c1 = False
     for word in valWords:
         if guess == word:
-            return True
-    return False
+            c1 = True
+    if not c1:
+        return False
+    else:
+        if grid != []:
+            for word in range(0, maxGuess):
+                pword = ""
+                for letter in range(0, 5):
+                    pword += grid[word][letter]
+                if pword == guess:
+                    return False
+    return True
 
 
 def guesses(): #inputs and output handling#
@@ -84,10 +95,10 @@ def guesses(): #inputs and output handling#
         correct = None
         while correct == None:
             guess = input("Enter Guess: ")
-            if len(guess.strip()) == 5 and guess.isalpha() and validWord(guess):
+            if len(guess.strip()) == 5 and guess.isalpha() and validWord(guess, grid):
                 correct = checkguess(guess) #checks guess, returs array of correctness vals
             else:
-                print("ERROR: Password in incorrect format, must be 5 letters long, letters only, no spaces and be a valid word")
+                print("ERROR: Password in incorrect format, must be 5 letters long, letters only, no spaces and be a valid word that hasn't been used before")
         print()
         
         clearScr()
@@ -125,10 +136,10 @@ def guesses(): #inputs and output handling#
 
 def setPassword(word: str): #setter for password if imported
     global password
-    if len(word.strip()) == 5 and word.isalpha() and validWord(word):
+    if len(word.strip()) == 5 and word.isalpha() and validWord(word, []):
         password = word.lower().strip()
     else:
-        print("ERROR: Password in incorrect format, must be 5 letters long, letters only, no spaces and be a valid word")
+        print("ERROR: Password in incorrect format, must be 5 letters long, letters only, no spaces and be a valid word that hasn't been used before")
 
 def randomise(): #picks a random 5 letter word as password and sets max guesses randomly between 5 and 10
     words = []
