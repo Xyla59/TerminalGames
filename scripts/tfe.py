@@ -187,4 +187,4 @@ def main(): #main function, handles loop and checking end conds
     else:
         print("No more space, you lose!")
 
-main()
+#main()

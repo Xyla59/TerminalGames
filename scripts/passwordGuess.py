@@ -12,6 +12,19 @@ except:
 #globals
 password = ""
 maxGuess = 0
+valWords = []
+
+def impWordlist(): #imports wordlist to global var
+    try:
+        global valWords
+        with open("wordList.txt", "r") as f:
+            for line in f:
+                if len(line[:-1]) == 5:
+                    valWords.append(line[:-1])
+    except:
+        print("ERROR: Error importing wordlist")
+        available = False
+
 
 def checkguess(guess: str): #Logic for checking a guess
     correct = [0,0,0,0,0] #correct guesses and value (2 = letter + place, 1 = letter, 0 = no match)
@@ -32,6 +45,14 @@ def checkguess(guess: str): #Logic for checking a guess
                     used[p] = 1
     
     return correct #returns array 
+
+def validWord(guess: str): #Validates guess is a word
+    global valWords
+    for word in valWords:
+        if guess == word:
+            return True
+    return False
+
 
 def guesses(): #inputs and output handling#
     global maxGuess, password
@@ -63,10 +84,10 @@ def guesses(): #inputs and output handling#
         correct = None
         while correct == None:
             guess = input("Enter Guess: ")
-            if len(guess.strip()) == 5 and guess.isalpha():
+            if len(guess.strip()) == 5 and guess.isalpha() and validWord(guess):
                 correct = checkguess(guess) #checks guess, returs array of correctness vals
             else:
-                print("ERROR: Password in incorrect format, must be 5 letters long, letters only, no spaces")
+                print("ERROR: Password in incorrect format, must be 5 letters long, letters only, no spaces and be a valid word")
         print()
         
         clearScr()
@@ -104,10 +125,10 @@ def guesses(): #inputs and output handling#
 
 def setPassword(word: str): #setter for password if imported
     global password
-    if len(word.strip()) == 5 and word.isalpha():
+    if len(word.strip()) == 5 and word.isalpha() and validWord(word):
         password = word.lower().strip()
     else:
-        print("ERROR: Password in incorrect format, must be 5 letters long, letters only, no spaces")
+        print("ERROR: Password in incorrect format, must be 5 letters long, letters only, no spaces and be a valid word")
 
 def randomise(): #picks a random 5 letter word as password and sets max guesses randomly between 5 and 10
     words = []
@@ -139,6 +160,7 @@ def getAvailable():
     return available
 
 def main():
+    impWordlist()
     if available:
         randomise()
         num = 0
@@ -152,7 +174,7 @@ def main():
         guesses()
     else:
         print()
-        print("This game is unavailable, colorama not installed")
+        print("This game is unavailable, colorama not installed or error importing wordlist")
         print()
 #comment out if using as an import
 #randomise()
