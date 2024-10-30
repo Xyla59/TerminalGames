@@ -87,7 +87,7 @@ def record():
 
 def displayGrid(): #Displays formatted grid
     global win, exploded, grid
-    clearScr
+    clearScr()
     print("Minefield:")
     print()
     if win or exploded:
